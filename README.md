@@ -52,12 +52,16 @@ Simply execute the script:
 ```bash
 python snipersolanaglobal.py
 ```
-GUI Usage Guide
+### 2. GUI Usage Guide
+
+Register for free API key in Jupiter Aggregator : ```bash https://portal.jup.ag/login```
+
 Connect Wallet: Paste your Private Key (Base58) into the top input field and click CONNECT WALLET.
+!!!Always use second wallet with low amount of SOL!!!
 
 Security Note: Keys are stored in RAM only and never sent to external servers.
 
-Settings:
+### Settings:
 
 Amount: SOL to spend per trade.
 
@@ -77,10 +81,10 @@ Click 🚀 BUY.
 
 The bot will automatically manage the trade based on your Stop-Loss/Exit settings.
 
-🧠 Code Architecture
+### 🧠 Code Architecture
 This project is divided into several asynchronous modules:
 
-1. Core Logic (WalletManager)
+### 1. Core Logic (WalletManager)
 File: snipersolanaglobal.py (Class: WalletManager)
 
 Function: Handles connection to Solana RPC.
@@ -93,20 +97,20 @@ sell_token: Handles exits with slippage protection.
 
 send_dev_fee: Automatically calculates and sends the protocol fee.
 
-2. Monitoring Loops
+### 2. Monitoring Loops
 pumportal_subscriber: Connects to wss://pumpportal.fun to get live trade data and detect when a coin completes the bonding curve.
 
 meteora_listener_loop: Polls RPC for new Meteora pools and analyzes initial liquidity.
 
 movers_fast_start_checker: Scrapes the "Top Movers" API to populate the list with trending coins that meet filter criteria.
 
-3. Analysis & Safety
+### 3. Analysis & Safety
 analyze_dev_since_launch: Uses solders and requests to fetch the developer's transaction history. It compares signatures against a KNOWN_ENTITIES list (Jito, MEV bots) to flag "bundled" launches.
 
-4. User Interface
+### 4. User Interface
 StableSniperGUI: Built with tkinter. It runs on a separate thread to keep the GUI responsive while asyncio loops handle the blockchain data in the background.
 
-⚠️ Disclaimer
+### ⚠️ Disclaimer
 Educational Purposes Only. Trading cryptocurrency, especially meme coins on Solana, carries high risk. You can lose your entire capital. The developer is not responsible for any financial losses, failed transactions, or API errors. Use at your own risk.
 
 📄 License
