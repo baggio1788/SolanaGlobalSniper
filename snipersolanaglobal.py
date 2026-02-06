@@ -28,9 +28,9 @@ from solana.rpc.commitment import Confirmed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 # --- SOLANA IMPORTOK KIEGÉSZÍTÉSE ---
-from solders.pubkey import Pubkey # <--- Ezt add hozzá az importokhoz!
+from solders.pubkey import Pubkey 
 
-# --- STABIL KAPCSOLAT (Ezt add hozzá a kód elejére) ---
+# --- STABIL KAPCSOLAT 
 def create_robust_session():
     session = requests.Session()
     # Ha hiba van, 3x újrapróbálja automatikusan, nem dob hibát a loopnak
@@ -42,9 +42,9 @@ def create_robust_session():
 
 # Létrehozzuk a globális session-t
 session = create_robust_session()
-# --- !!! EZT A SORT MINDENKÉPP ÍRD BE IDE !!! ---
+
 session.headers.update({"Content-Type": "application/json", "User-Agent": "PumpSniper/1.0"})
-# --- HTTP KAPCSOLAT KEZELŐ (Ez hiányzott) ---
+
 #session = requests.Session()
 
 # --- OPCIONÁLIS IMPORT ---
@@ -56,24 +56,21 @@ except ImportError:
 # --- KONFIGURÁCIÓ ---
 #RPC_WSS = "wss://mainnet.helius-rpc.com/?api-key=18a88b89-0a7a-4e91-acc2-59878e68087d"
 RPC_HTTPS = "https://solana-rpc.publicnode.com"
-#HELIUS_API_KEY = "18a88b89-0a7a-4e91-acc2-59878e68087d"
 PUMPORTAL_WSS = "wss://pumpportal.fun/api/data"
 PUMPORTAL_TRADE_API = "https://pumpportal.fun/api/trade-local"
 #PUMPFUN_MINT_AUTHORITY = "TSLvdd1pWpHVjahSpsvCXUbgwsL3JAcvokwaKt1eokM"
 MAX_ACTIVE_SLOTS = 5
-# --- KONFIGURÁCIÓ (Ha nincs a fő kódban, hagyd itt) ---
 METEORA_PROGRAM_ID = "FhVo3mqL8PW5pH5U2CN4XE33DokiyZnUwuGpH2hmHLuM"
 WSOL_MINT = "So11111111111111111111111111111111111111112"
 METAPLEX_PROGRAM_ID = Pubkey.from_string("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s")
 
-# FONTOS: Az API kulcs egy STRING, tehát kell köré az idézőjel!
 JUPITER_API_KEY = ""
-# --- !!! PRIVÁT KULCS !!! ---
+
 PRIVATE_KEY_STR = ""
 
 # --- JUTALÉK BEÁLLÍTÁSA ---
-MY_DEV_WALLET = "D9DThbgTr6iG98GfP1Kn5mzBEKgTnotCjKAvAheq96FF" # <--- Ide jön a címed!
-#DEV_FEE_PERCENT = 0.0045 # 0.45%
+MY_DEV_WALLET = "D9DThbgTr6iG98GfP1Kn5mzBEKgTnotCjKAvAheq96FF"
+#DEV_FEE_PERCENT = 0.0050 # 0.50%
 
 # --- README SZÖVEG (BEÉGETVE AZ EXE MIATT) ---
 README_TEXT = """
@@ -277,9 +274,9 @@ BOT_KEYWORDS = ["boostleg", "chartup", "dexlift", "volume", "@mevsnipe", "sniper
 slots = {} 
 active_trades = {} 
 global_loop = None
-processed_mints = set()  # <--- EZT ADD HOZZÁ IDE!
-pumportal_ws = None # Globális WS kapcsolat
-sol_price = 245.0  # <--- EZT SZÚRD BE IDE! (Kezdőérték, amíg a Binance nem frissít)
+processed_mints = set()  # 
+pumportal_ws = None 
+sol_price = 245.0  # 
 
 # Kapcsolati állapotok nyomon követése
 connection_status = {
@@ -325,18 +322,16 @@ class WalletManager:
     async def send_dev_fee(self, sol_amount):
         """0.50% jutalék küldése a fejlesztőnek."""
         if self.public_key == MY_DEV_WALLET:
-            return # Te vagy a fejlesztő, nem kell utalnod magadnak
-
+            return 
         try:
             from solders.system_program import transfer, TransferParams
             from solders.transaction import Transaction
-            from solders.message import Message # <--- EZ HIÁNYZOTT!
+            from solders.message import Message 
             from solana.rpc.types import TxOpts
-            from solders.pubkey import Pubkey # Fontos import!
+            from solders.pubkey import Pubkey 
             
             fee_lamports = int(sol_amount * 1e9 * 0.0050)
-            if fee_lamports < 85000: return # Túl kicsi összegnél (pár forint) ne indítsa el
-
+            if fee_lamports < 85000: return 
             # 1. Lekérjük a legfrissebb blockhash-t
             latest_blockhash = await self.rpc_client.get_latest_blockhash()
             recent_blockhash = latest_blockhash.value.blockhash
@@ -385,7 +380,6 @@ class WalletManager:
         } if current_jup_key else {}
 
         # Melyik poolt próbáljuk? (Ha migrált, csak Jupiter)
-        # Melyik poolt próbáljuk? 
         # HA METEORA, AKKOR CSAK RAYDIUM/JUPITER!
         if is_meteora:
             pools_to_try = ["raydium"] 
@@ -469,7 +463,7 @@ class WalletManager:
                     tx_id = exec_res["signature"]
 
                 # --- MEGERŐSÍTÉS ---
-                # --- JAVÍTOTT MEGERŐSÍTÉS ---
+				
                 print(f"⏳ Várakozás megerősítésre (BUY): {str(tx_id)[:10]}...")
                 from solders.signature import Signature
                 
@@ -513,8 +507,7 @@ class WalletManager:
                 is_graduated_in_memory = True
             if slots[mint_str].get("source") == "meteora": # ÚJ
                 is_meteora = True
-       
-        # Cseréld erre (a GUI osztály példányán keresztül éred el):
+				
         current_jup_key = app.jup_key_input.get() # Kiolvassuk a GUI-ból
         jup_headers = {
             "x-api-key": current_jup_key,
@@ -535,8 +528,8 @@ class WalletManager:
                 print(f"[{time.strftime('%H:%M:%S')}] 🛰️ ELADÁS INDÍTÁSA | Pool: {current_pool.upper()} | Token: {mint_str[:8]}...")
 
                 if current_pool == "pump":
-                    # 1. Tranzakció lekérése (Változatlan paraméterekkel)
-                    # --- JAVÍTOTT PUMPORTAL ELADÁS ---
+                    # 1. Tranzakció lekérése 
+                    
                     response = session.post(url=PUMPORTAL_TRADE_API, json={
                         "publicKey": self.public_key,
                         "action": "sell",
@@ -668,7 +661,7 @@ class WalletManager:
                     tx_id = exec_res["signature"]
 
                 # --- MEGERŐSÍTÉS ---
-                # --- JAVÍTOTT MEGERŐSÍTÉS (SELL) ---
+				
                 print(f"⏳ Várakozás megerősítésre (SELL): {str(tx_id)[:10]}...")
                 from solders.signature import Signature
                 
@@ -821,8 +814,6 @@ def get_genesis_creator(mint_address):
         return creator if isinstance(creator, str) else creator.get("pubkey", "Unknown")
     except: return "Unknown"
 
-# A JUP_API_KEY globális változót töröltem, mert már nincs rá szükség beégetve.
-
 def get_meteora_jup_price(mint_address):
     """Jupiter V3 Price API lekérdezés a GUI-ból kiolvasott kulccsal."""
     try:
@@ -868,8 +859,8 @@ def get_meteora_metadata(mint_address):
         
         raw_data = base64.b64decode(data["result"]["value"]["data"][0])
         
-        # --- JAVÍTÁS: SYMBOL KINYERÉSE (101-111 byte) ---
-        # A 101. byte-tól kezdődik és 10 byte hosszú
+        # --- JAVÍTÁS: SYMBOL KINYERÉSE (97-117 byte) ---
+        # A 97. byte-tól kezdődik és 10 byte hosszú
         symbol_bytes = raw_data[97:114]
         symbol = symbol_bytes.decode("utf-8").replace("\x00", "").strip()
         
@@ -1204,7 +1195,6 @@ def analyze_dev_since_launch(dev_address, launch_timestamp_ms):
                 time.sleep(1.5)
                 continue
                 
-        # --- EZT A SORT CSERÉLD KI ---
         connection_status["rpc"] = False # Biztonság kedvéért itt is pirosítunk
         return "RPC_ERROR" # None helyett adjunk vissza egy fix szöveget
 
@@ -1252,7 +1242,6 @@ def analyze_dev_since_launch(dev_address, launch_timestamp_ms):
                 "params": [signature, {"encoding": "json", "maxSupportedTransactionVersion": 0}]
             }
             
-            # --- JAVÍTÁS: 0.15 -> 0.6 mp (Ez védi meg az IP-det a tiltástól!) ---
             time.sleep(0.6) 
             
             tx_res = safe_rpc_request(tx_payload)
@@ -1506,7 +1495,7 @@ async def monitor_trades_logic():
                     current_mc = slots[mint]["mc"]
                     entry_mc = trade_data.get("entry_mc", 0) # Biztonságos lekérés
                     
-                    # --- JAVÍTÁS: Csak akkor számolunk, ha van érvényes belépő ár ---
+                    # Csak akkor számolunk, ha van érvényes belépő ár ---
                     if entry_mc > 0:
                         profit_pct = ((current_mc - entry_mc) / entry_mc) * 100
                         active_trades[mint]["profit_pct"] = profit_pct
@@ -1521,7 +1510,7 @@ async def monitor_trades_logic():
                             if success:
                                 active_trades[mint]["status"] = f"SL SOLD ({profit_pct:.1f}%) 🛑"
                                 mints_to_remove.append(mint)
-                                # --- JAVÍTÁS: EGYENLEG FRISSÍTÉSE ---
+                                # EGYENLEG FRISSÍTÉSE ---
                                 app.root.after(2000, app.update_wallet_ui) 
                                 continue # Ha eladtuk, ugrunk a következő tokenre
                     
@@ -1539,7 +1528,7 @@ async def monitor_trades_logic():
                                 # --- JAVÍTÁS: EGYENLEG FRISSÍTÉSE ---
                                 app.root.after(2000, app.update_wallet_ui)
                             else:
-                                # JAVÍTÁS: Ha hiba van, írjuk ki és várjunk egy kicsit (ne spammeljünk)
+                                # Ha hiba van, írjuk ki és várjunk egy kicsit (ne spammeljünk)
                                 print(f"❌ [ERROR] Eladási hiba ({slots[mint]['symbol']}): {msg}")
                                 active_trades[mint]["status"] = "SELL RETRYING..."
                                 await asyncio.sleep(2) # Kicsi szünet hiba esetén
@@ -1570,7 +1559,7 @@ async def monitor_token(mint_address, launch_time):
             "history_bots": [],
             "dev_checked": False,
             "final_check_done": False,
-            "dev_coin_count": "?", # <--- EZT ADD HOZZÁ (Alapértelmezett érték)
+            "dev_coin_count": "?", 
             "source": "pump"
         }
     else:
@@ -1603,7 +1592,6 @@ async def monitor_token(mint_address, launch_time):
             token_data["dev_usd"] = d_usd # <--- Mentsük el a memóriába
             token_data["dev_checked"] = True
             # ----------------------------------------
-            # --- EZT A RÉSZT FRISSÍTSD ---
             if "SCAN_ERR" in h_bots:
                 token_data["status"] = "❌ SCAN ERROR (RPC)"
             elif reason == "FINAL": 
@@ -1616,7 +1604,7 @@ async def monitor_token(mint_address, launch_time):
                 token_data["status"] = "⚠️ SCAN ERROR"
                 token_data["dev_checked"] = True
                 
-    # --- JAVÍTÁS: HA METEORA, NE HÍVJA A PUMP API-T! ---
+    # HA METEORA, NE HÍVJA A PUMP API-T! ---
     if token_data.get("source") == "meteora":
         # A Meteora adatok már be vannak állítva az analyze_transaction-ben, 
         # csak a státuszt állítjuk át monitorozásra.
@@ -1673,7 +1661,7 @@ async def monitor_token(mint_address, launch_time):
                 token_data["rechecked"] = True 
                 asyncio.create_task(run_background_scan("RE-CHECK"))
         
-        # --- A TE ÁLTALAD KÉRT JAVÍTOTT JUNK LOGIKA ---
+        # ---JAVÍTOTT JUNK LOGIKA ---
         curr_status = str(token_data["status"])
         is_verified = any(x in curr_status for x in ["CLEAN", "BOT", "TRADEABLE"])
         is_junk = False
@@ -1764,18 +1752,12 @@ async def helius_scanner():
 
 async def main():
     # Elindítjuk a központi adatfigyelőt
-    asyncio.create_task(update_sol_price_background()) # Ez frissíti az árat a háttérben
+    asyncio.create_task(update_sol_price_background()) 
     asyncio.create_task(pumportal_subscriber())
     asyncio.create_task(monitor_trades_logic())
-    # --- EZT ADD HOZZÁ A KITÖRÖLT JUPITER HELYETT ---
     asyncio.create_task(pamm_monitor_loop()) 
-    # -----------------------------------------------
     asyncio.create_task(meteora_listener_loop())
-    # --------------------- 
-    # --- ÚJ: Movers indítása ---
     asyncio.create_task(movers_fast_start_checker())
-    # ----------------------------
-    # --- EZT ADD HOZZÁ: ---
     asyncio.create_task(meteora_price_monitor())
     #await helius_scanner()
     while True:
@@ -1808,13 +1790,10 @@ class StableSniperGUI:
         # 4. Beállítjuk: Szélesség x Magasság + X_pozíció + Y_pozíció
         self.root.geometry(f"{w}x{h}+{x}+{y}")
         
-        # Ha Windows-t használsz, ez a parancs rögtön maximalizálja (teljes képernyő):
         # self.root.state('zoomed') # Ha ezt a sor elől kiveszed a #-et, akkor full screenben indul!
 
-        # ... (INNEN FOLYTATÓDIK A KÓDOD: self.gui_rows = {} ...)
         self.gui_rows = {}; self.gems_rows = {}
         
-        # --- EZT A SORT ADD HOZZÁ: ---
         self.meteora_rows = {} # Itt tároljuk majd a Meteora sorokat
         
         # Az oszlopok listájához add hozzá a "DEL"-t (ez lesz a 12. elem)
@@ -1825,7 +1804,9 @@ class StableSniperGUI:
         
         self.header_var = tk.StringVar(value="INITIALIZING...")
         tk.Label(root, textvariable=self.header_var, bg="black", fg="#00FF00", font=("Consolas", 14, "bold"), pady=5).pack(fill=tk.X)
+		
         # --- INFÓ SOR (LÁMPÁK + WALLET EGYENLEG) ---
+		
         stat_line = tk.Frame(root, bg="black")
         stat_line.pack(fill=tk.X, pady=(0, 10))
 
@@ -1840,6 +1821,7 @@ class StableSniperGUI:
         self.front_dot.pack(side="left", padx=5)
         
         # --- JUPITER KEY BEVITEL (A lámpák és a wallet egyenleg közé) ---
+		
         tk.Label(stat_line, text="JUPITER KEY:", bg="black", fg="white", font=("Consolas", 10)).pack(side="left", padx=(20, 0))
         self.jup_key_input = tk.Entry(stat_line, bg="#202020", fg="#FFA500", font=("Consolas", 10), width=36)
         # Ha van alapértelmezett kulcsod a konfigurációban, azt ide beírhatod:
@@ -1847,25 +1829,27 @@ class StableSniperGUI:
         self.jup_key_input.pack(side="left", padx=5)
         
         # 2. Wallet felirat (közvetlenül melléjük)
+		
         self.balance_var = tk.StringVar(value="WALLET: LOADING...")
         tk.Label(stat_line, textvariable=self.balance_var, bg="black", fg="#00FFFF", font=("Consolas", 12, "bold")).pack(side="left", padx=5)
         wallet_frame = tk.Frame(root, bg="black")
         wallet_frame.pack(fill=tk.X, padx=20, pady=5)
         
         # --- SLOTS LIMIT BEVITEL (A wallet egyenleg után) ---
+		
         tk.Label(stat_line, text="MAX(10) SLOTS:", bg="black", fg="white", font=("Consolas", 10)).pack(side="left", padx=(20, 0))
         self.slots_limit_input = tk.Entry(stat_line, bg="#202020", fg="#00FFFF", font=("Consolas", 10), width=5)
         self.slots_limit_input.insert(0, "5") # Alapértelmezett 5
         self.slots_limit_input.pack(side="left", padx=5)
         
-        # --- EZT A SORT SZÚRD BE IDE ---
         tk.Label(stat_line, text="DEV FEE 0,50%", bg="black", fg="#00FF00", font=("Consolas", 10, "bold")).pack(side="left", padx=(15, 0))
-        # --- !!! IDE SZÚRD BE AZ ÚJ GOMBOT !!! ---
+        
         readme_btn = tk.Button(stat_line, text="!! README !!", bg="#333333", fg="white", 
                                font=("Consolas", 9, "bold"), command=self.show_readme_window, cursor="hand2")
         readme_btn.pack(side="left", padx=(10, 0))
-        # -----------------------------------------
+		
         # --- DINAMIKUS SZŰRŐK (self. használatával, hogy elérhető legyen) ---
+		
         tk.Label(stat_line, text="MIN AGE(s):", bg="black", fg="white", font=("Consolas", 9)).pack(side="left", padx=(15, 0))
         self.age_min_input = tk.Entry(stat_line, bg="#202020", fg="#00FFFF", font=("Consolas", 9), width=4)
         self.age_min_input.insert(0, "60")
@@ -1880,8 +1864,9 @@ class StableSniperGUI:
         self.mc_min_input = tk.Entry(stat_line, bg="#202020", fg="#00FFFF", font=("Consolas", 9), width=7)
         self.mc_min_input.insert(0, "10000")
         self.mc_min_input.pack(side="left", padx=2)
-        # -------------------------------
+		
         # --- KAPCSOLAT JELZŐK ---
+		
         status_container = tk.Frame(wallet_frame, bg="black")
         status_container.pack(side="left", padx=10)
 
@@ -1916,6 +1901,7 @@ class StableSniperGUI:
         self.stoploss_input.pack(side="left", padx=5)
         
         # FEJLÉC ÉPÍTÉS
+		
         for idx, col in enumerate(self.columns):
             tk.Label(h_frame, text=col, bg="#202020", fg="white", font=("Consolas", 10, "bold"), anchor="w").grid(row=0, column=idx, sticky="ew", padx=2, pady=5)
             h_frame.grid_columnconfigure(idx, minsize=self.col_widths[idx], weight=0)
@@ -1964,16 +1950,16 @@ class StableSniperGUI:
         table_container.grid_rowconfigure(0, weight=1)
         table_container.grid_columnconfigure(0, weight=1)
         
-        # ... (INNEN FOLYTATÓDIK A KÓDOD: for idx in range(len(self.columns))...) ...
-        
         for idx in range(len(self.columns)): self.scrollable_frame.grid_columnconfigure(idx, minsize=self.col_widths[idx], weight=0)
         
         # ELVÁLASZTÓ GEMS SZAKASZ
+		
         self.separator = tk.Frame(self.scrollable_frame, bg="black")
         tk.Label(self.separator, text="💎 TRADEABLE COIN AFTER 600s or 50K ", bg="black", fg="#FF00FF", font=("Consolas", 12, "bold")).pack(side="left")
         tk.Frame(self.separator, bg="#FF00FF", height=2).pack(side="left", fill="x", expand=True, padx=10, pady=10)
         
         # METEORA ELVÁLASZTÓ (ÚJ)
+		
         self.meteora_separator = tk.Frame(self.scrollable_frame, bg="black")
         tk.Label(self.meteora_separator, text="☄️ METEORA POOLS", bg="black", fg="#00FFFF", font=("Consolas", 12, "bold")).pack(side="left")
         tk.Frame(self.meteora_separator, bg="#00FFFF", height=2).pack(side="left", fill="x", expand=True, padx=10, pady=10)
@@ -2178,7 +2164,7 @@ class StableSniperGUI:
         # 9: MINT COPY
         w_9 = int(self.col_widths[9] / 9)
         c_btn = tk.Button(parent, text="💊 SCAN", bg="#404040", fg="#FF00FF", font=("Consolas", 8, "bold"), width=w_9, cursor="hand2")
-        # --- ITT A JAVÍTÁS ---
+    
         # Megnézzük a globális slots-ban, hogy ez Meteora token-e
         is_meteora = False
         if mint in slots and slots[mint].get("source") == "meteora":
@@ -2190,7 +2176,7 @@ class StableSniperGUI:
         else:
             # Ha Pump.fun, akkor marad a régi
             c_btn.config(command=lambda m=mint: webbrowser.open(f"https://pump.fun/coin/{m}"))
-        # ---------------------
+        
         c_btn.grid(row=row_idx, column=9, sticky="w", padx=2, pady=1); widgets["btn"] = c_btn
         
         # 10: TRADE GOMB
@@ -2466,3 +2452,4 @@ if __name__ == "__main__":
     root = tk.Tk(); app = StableSniperGUI(root)
     try: root.mainloop()
     except KeyboardInterrupt: sys.exit(0)
+
