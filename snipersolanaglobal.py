@@ -54,7 +54,6 @@ except ImportError:
     pyperclip = None
 
 # --- KONFIGURÁCIÓ ---
-#RPC_WSS = "wss://mainnet.helius-rpc.com/?api-key=18a88b89-0a7a-4e91-acc2-59878e68087d"
 RPC_HTTPS = "https://solana-rpc.publicnode.com"
 PUMPORTAL_WSS = "wss://pumpportal.fun/api/data"
 PUMPORTAL_TRADE_API = "https://pumpportal.fun/api/trade-local"
@@ -203,7 +202,7 @@ STEP 4: SELL / MANAGE
    slightly lower than the displayed price.
 
 3. FEES:
-   The bot includes a small development fee (0.45%) on successful trades to 
+   The bot includes a small development fee (0.50%) on successful trades to 
    support the software maintenance.
    
 ==============================================================================
@@ -1759,7 +1758,6 @@ async def main():
     asyncio.create_task(meteora_listener_loop())
     asyncio.create_task(movers_fast_start_checker())
     asyncio.create_task(meteora_price_monitor())
-    #await helius_scanner()
     while True:
         await asyncio.sleep(3600)
 
@@ -2452,4 +2450,5 @@ if __name__ == "__main__":
     root = tk.Tk(); app = StableSniperGUI(root)
     try: root.mainloop()
     except KeyboardInterrupt: sys.exit(0)
+
 
