@@ -1,0 +1,9 @@
+solana
+solders
+requests
+websockets
+base58
+borsh-construct
+construct
+pyperclip
+urllib3
