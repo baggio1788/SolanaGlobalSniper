@@ -32,7 +32,7 @@ A high-performance, GUI-based trading bot and monitor for the Solana blockchain.
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/baggio1788/SolanaGlobalSniper.git](https://github.com/baggio1788/SolanaGlobalSniper.git)
+git clone https://github.com/baggio1788/SolanaGlobalSniper.git
 cd SolanaGlobalSniper
 ```
 2. Install Dependencies
