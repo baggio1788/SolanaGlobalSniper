@@ -54,7 +54,7 @@ python snipersolanaglobal.py
 ```
 ### 2. GUI Usage Guide
 
-Register for free API key in Jupiter Aggregator : ```bash https://portal.jup.ag/login```
+Register for free API key in Jupiter Aggregator : ```https://portal.jup.ag/login```
 
 Connect Wallet: Paste your Private Key (Base58) into the top input field and click CONNECT WALLET.
 !!!Always use second wallet with low amount of SOL!!!
@@ -100,15 +100,15 @@ send_dev_fee: Automatically calculates and sends the protocol fee.
 ### 2. Monitoring Loops
 pumportal_subscriber: Connects to wss://pumpportal.fun to get live trade data and detect when a coin completes the bonding curve.
 
-meteora_listener_loop: Polls RPC for new Meteora pools and analyzes initial liquidity.
+meteora_listener_loop: Polls RPC for new Meteora pools and analyzes initial liquidity. You need to put your own API key from Jupiter aggregator!
 
 movers_fast_start_checker: Scrapes the "Top Movers" API to populate the list with trending coins that meet filter criteria.
 
 ### 3. Analysis & Safety
-analyze_dev_since_launch: Uses solders and requests to fetch the developer's transaction history. It compares signatures against a KNOWN_ENTITIES list (Jito, MEV bots) to flag "bundled" launches.
+analyze_dev_since_launch: Uses ```solders``` and ```requests``` to fetch the developer's transaction history. It compares signatures against a KNOWN_ENTITIES list (Jito, MEV bots) to flag "bundled" launches.
 
 ### 4. User Interface
-StableSniperGUI: Built with tkinter. It runs on a separate thread to keep the GUI responsive while asyncio loops handle the blockchain data in the background.
+StableSniperGUI: Built with ```tkinter```. It runs on a separate thread to keep the GUI responsive while ```asyncio``` loops handle the blockchain data in the background.
 
 ### ⚠️ Disclaimer
 Educational Purposes Only. Trading cryptocurrency, especially meme coins on Solana, carries high risk. You can lose your entire capital. The developer is not responsible for any financial losses, failed transactions, or API errors. Use at your own risk.
